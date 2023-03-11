@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home page</title>
+</head>
+<body>
+
+    <form action="" method="GET">
+        <input type="text" name="search" id="search" placeholder="search query">
+        <button type="submit">Search</button>
+    </form>
+    <hr>
+<table border="1">
+    <thead>
+        <th>ID</th>
+        <th>Log Name</th>
+        <th>Log Description</th>
+        <th>Ip Address</th>
+        <th>Port</th>
+        <th>Http Response</th>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{log.id}}</td>
+            <td>{{log.name}}</td>
+            <td>{{log.description}}</td>
+            <td>{{log.ip_address}}</td>
+            <td>{{log.port}}</td>
+            <td>{{log.http_response}}</td>
+
+            {% endfor %}
+        </tr>
+    </tbody>
+
+</table>
+
+    
+</body>
+</html>
