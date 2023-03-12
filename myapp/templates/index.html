@@ -4,39 +4,116 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>home page</title>
+    <link rel="stylesheet" href="">
 </head>
 <body>
+    <div class="main">
+        <div class="search-form">
+        <form action="" method="GET" id="search-form">
+            <input type="text" name="search" id="search" placeholder="search query">
+            <button type="submit">Search</button>
+        </form>
+        <!-- End of search-form div -->
+        </div>
+        <div class="error" style="display: none;">
+            Error message here!
+            
+            <!-- End of error div -->
+        </div>
+        <div class="table">
+            <table border="1">
+                <thead>
+                    <th>ID</th>
+                    <th>Log Name</th>
+                    <th>Log Description</th>
+                    <th>Ip Address</th>
+                    <th>Port</th>
+                    <th>Http Response</th>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{log.id}}</td>
+                        <td>{{log.name}}</td>
+                        <td>{{log.description}}</td>
+                        <td>{{log.ip_address}}</td>
+                        <td>{{log.port}}</td>
+                        <td>{{log.http_response}}</td>
 
-    <form action="" method="GET">
-        <input type="text" name="search" id="search" placeholder="search query">
-        <button type="submit">Search</button>
-    </form>
-    <hr>
-<table border="1">
-    <thead>
-        <th>ID</th>
-        <th>Log Name</th>
-        <th>Log Description</th>
-        <th>Ip Address</th>
-        <th>Port</th>
-        <th>Http Response</th>
-    </thead>
-    <tbody>
-        {% for log in logs %}
-        <tr>
-            <td>{{log.id}}</td>
-            <td>{{log.name}}</td>
-            <td>{{log.description}}</td>
-            <td>{{log.ip_address}}</td>
-            <td>{{log.port}}</td>
-            <td>{{log.http_response}}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
 
-            {% endfor %}
-        </tr>
-    </tbody>
+            </table> 
+            <!-- End of table div -->
+        </div>
+       
 
-</table>
+    
+        <!-- End of main div -->
+    </div>
+
+   
+
+<h2>Dynamic Data from Server</h2>
+<ul id="display"></ul>
+
+<script>
+    $(document).on('submit','#search-form',function(e){
+        e.preventDefault();
+        let searchTerm = $('#search').val();
+        let errorEl = $('.error');
+        if(searchTerm == ""){
+            
+            errorEl.css('display','block')
+            errorEl.css('color','red','font-size',20);
+            errorEl.text('please type something');
+
+        }
+        else{
+            console.log(searchTerm);
+            errorEl.hide()
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'home' %}",
+                data: {
+                    search:$('#search').val()
+                },
+
+                success: function(response){
+                    $('tbody').empty();
+                    for(var log in response.logs){
+                        
+                        let temp = `
+                        <tr>
+                            <td> ${response.logs[log].id}</td>
+                            <td> ${response.logs[log].name}</td>
+                            <td> ${response.logs[log].description}</td>
+                            <td> ${response.logs[log].ip_address}</td>
+                            <td> ${response.logs[log].port}</td>
+                            <td> ${response.logs[log].http_response}</td>
+                        
+                        </tr>
+                        
+                        `;
+                        $('tbody').append(temp)
+                    }
+                },
+                error: function(response){
+                    alert("an error occured", response);
+                }
+            });
+        }
+        
+        
+       
+           
+        });
+</script>
+
 
     
 </body>
