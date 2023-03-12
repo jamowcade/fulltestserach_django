@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>home page</title>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+   
 </head>
 <body>
     <div class="main">
-        <div class="search-form">
+        <div class="search-div">
         <form action="" method="GET" id="search-form">
             <input type="text" name="search" id="search" placeholder="search query">
             <button type="submit">Search</button>
@@ -22,7 +24,7 @@
             
             <!-- End of error div -->
         </div>
-        <div class="table">
+        <div class="table-div">
             <table border="1">
                 <thead>
                     <th>ID</th>
@@ -49,16 +51,13 @@
             </table> 
             <!-- End of table div -->
         </div>
+
+        <!-- <h3 id="not-found">No matchs; Try again!</h3> -->
        
 
     
         <!-- End of main div -->
     </div>
-
-   
-
-<h2>Dynamic Data from Server</h2>
-<ul id="display"></ul>
 
 <script>
     $(document).on('submit','#search-form',function(e){
@@ -70,10 +69,11 @@
             errorEl.css('display','block')
             errorEl.css('color','red','font-size',20);
             errorEl.text('please type something');
+            errorEl.fadeOut(7000)
 
         }
         else{
-            console.log(searchTerm);
+            // console.log(searchTerm);
             errorEl.hide()
             
             $.ajax({
@@ -85,9 +85,12 @@
 
                 success: function(response){
                     $('tbody').empty();
-                    for(var log in response.logs){
+                    let temp = "";
+                    if(response.logs.length > 0){
                         
-                        let temp = `
+                        for(var log in response.logs){
+                        
+                        temp = `
                         <tr>
                             <td> ${response.logs[log].id}</td>
                             <td> ${response.logs[log].name}</td>
@@ -95,15 +98,25 @@
                             <td> ${response.logs[log].ip_address}</td>
                             <td> ${response.logs[log].port}</td>
                             <td> ${response.logs[log].http_response}</td>
-                        
                         </tr>
-                        
                         `;
                         $('tbody').append(temp)
                     }
+                    }
+                    else{
+                        temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
+                        $('tbody').append(temp)
+                       
+                        
+                    }
+                   
                 },
                 error: function(response){
-                    alert("an error occured", response);
+                    errorEl.css('display','block')
+                    errorEl.css('color','red','font-size',20);
+                    errorEl.text('Error: Invalid Query');
+                    
+                    errorEl.fadeOut(7000)
                 }
             });
         }

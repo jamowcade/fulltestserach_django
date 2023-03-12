@@ -4,7 +4,6 @@ from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank
 from django.http import JsonResponse
 # Create your views here.
 
-
 def index(request):
     logs = mylogs.objects.all()
 
