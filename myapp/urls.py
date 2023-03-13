@@ -3,5 +3,5 @@ from .import views
 
 urlpatterns = [
     path("",views.index, name="home" ),
-    path("test/",views.testAjax, name="test" ),
+    path("test/",views.search, name="search" ),
 ]

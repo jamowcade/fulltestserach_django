@@ -8,7 +8,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>home page</title>
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
-   
+    <style>
+		
+		.pagination { display: inline-block;}
+		.pagination a { color: black; float: left; padding: 8px 16px; text-decoration: none;}
+		.pagination a.active { background-color: #4CAF50; color: white;}
+		.pagination a:hover:not(.active) {background-color: #ddd;}
+		</style>
 </head>
 <body>
     <div class="main">
@@ -35,7 +41,7 @@
                     <th>Http Response</th>
                 </thead>
                 <tbody>
-                    {% for log in logs %}
+                    {% for log in first_page %}
                     <tr>
                         <td>{{log.id}}</td>
                         <td>{{log.name}}</td>
@@ -47,8 +53,22 @@
                         {% endfor %}
                     </tr>
                 </tbody>
-
+               
             </table> 
+            <div class="pagination">
+                {% for i in page_range %}
+                {% if i <= 3 %}
+                <a style="margin-left: 5px; " href="{{i}}">{{i}}</a>
+                {% else %}
+                
+                {% endif %}
+               
+                {% endfor %}
+                </div>
+                <script>
+                    
+                </script>
+
             <!-- End of table div -->
         </div>
 
@@ -64,21 +84,10 @@
         e.preventDefault();
         let searchTerm = $('#search').val();
         let errorEl = $('.error');
-        if(searchTerm == ""){
-            
-            errorEl.css('display','block')
-            errorEl.css('color','red','font-size',20);
-            errorEl.text('please type something');
-            errorEl.fadeOut(7000)
-
-        }
-        else{
             // console.log(searchTerm);
-            errorEl.hide()
-            
             $.ajax({
                 type: 'GET',
-                url: "{% url 'home' %}",
+                url: "{% url 'search' %}",
                 data: {
                     search:$('#search').val()
                 },
@@ -93,21 +102,21 @@
                         temp = `
                         <tr>
                             <td> ${response.logs[log].id}</td>
-                            <td> ${response.logs[log].name}</td>
-                            <td> ${response.logs[log].description}</td>
-                            <td> ${response.logs[log].ip_address}</td>
+                            <td>${response.logs[log].name}</td>
+                            <td>${response.logs[log].description}</td>
+                            <td>${response.logs[log].ip_address}</td>
                             <td> ${response.logs[log].port}</td>
                             <td> ${response.logs[log].http_response}</td>
                         </tr>
                         `;
                         $('tbody').append(temp)
+                        
                     }
                     }
                     else{
                         temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
                         $('tbody').append(temp)
-                       
-                        
+
                     }
                    
                 },
@@ -119,12 +128,46 @@
                     errorEl.fadeOut(7000)
                 }
             });
-        }
-        
-        
-       
-           
         });
+        // pagination
+        $('a').click(function(e){
+            e.preventDefault();
+            var page_no = $(this).attr('href');
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'home' %}",
+                data: {
+                    page_no: page_no,
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+
+                },
+                success: function(response){
+                    $('tbody').empty();
+                    let temp = ""
+                    for(let log in response.logs){
+                        temp = `
+                        <tr>
+                            <td> ${response.logs[log].id}</td>
+                            <td>${response.logs[log].name}</td>
+                            <td>${response.logs[log].description}</td>
+                            <td>${response.logs[log].ip_address}</td>
+                            <td> ${response.logs[log].port}</td>
+                            <td> ${response.logs[log].http_response}</td>
+                        </tr>
+                        `;
+                        $('tbody').append(temp)
+
+
+                    }
+                },
+                error: function(response){
+                    alert('error occurred')
+                }
+            });
+        })
+
+
 </script>
 
 

@@ -9,11 +9,11 @@ body{
 
 .main{
  
-    max-width: 100%;
+    width: 980px;
     background-color: #eee;
     /* border: 3px solid rgb(31, 31, 88); */
     overflow: hidden;
-    margin: 20px;
+    margin: 0px;
     margin-top: 4rem;
 
 
