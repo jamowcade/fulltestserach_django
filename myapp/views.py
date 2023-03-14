@@ -9,24 +9,29 @@ def paginate(object, per_page):
 
 
 def index(request):
-    logs = ""
-    q = request.GET.get('search')
-    if q:
+    logs = logs = mylogs.objects.all()
+    q = request.GET.get('search', None)
+    
+    if q is not None:
         vector = SearchVector('name','description', 'port','http_response', 'ip_address')
         query = SearchQuery(q, search_type="raw")
         # search_headline = SearchHeadline('description', query) 
         logs = mylogs.objects.annotate(search=vector).filter(search=query)
+        paginator = Paginator(logs, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+    
     else:
         logs = mylogs.objects.all()
-    paginator = Paginator(logs, 10) # Show 25 contacts per page.
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(logs, 10) # Show 25 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
    
     
     context = {
-        "page_obj":page_obj
+        "page_obj":page_obj,
+        "query":q
     }
     # logs = mylogs.objects.all()
     # per_page = 10
@@ -55,14 +60,15 @@ def index(request):
     return render(request, 'index.html', context)
 
 def search(request):
-    logs = mylogs.objects.all()
+    logs = ""
+    context = {
+        "logs":logs
+    }
     q = request.GET.get('search')
-    if q:
-        print(q)
-        vector = SearchVector('name','description', 'port','http_response', 'ip_address')
-        query = SearchQuery(q, search_type="raw")
+    print(q)
+    vector = SearchVector('name','description', 'port','http_response', 'ip_address')
+    query = SearchQuery(q, search_type="raw")
         # search_headline = SearchHeadline('description', query) 
-        logs = mylogs.objects.annotate(search=vector).filter(search=query)
-        return JsonResponse({"logs":list(logs.values())})
-
-    return JsonResponse({"logs":list(logs.values())})
+    logs = mylogs.objects.annotate(search=vector).filter(search=query)
+    return render(request, 'index.html', context)
+  

@@ -57,11 +57,11 @@
             </table> 
             
 
-<div class="pagination">
+<!-- <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
         {% endif %}
 
         <span class="current">
@@ -69,24 +69,48 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
             <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
-</div>
-            <!-- <div class="pagination">
-                {% for i in page_range %}
-                {% if i <= 3 %}
-                <a style="margin-left: 5px; " href="{{i}}">{{i}}</a>
-                {% else %}
+</div> -->
+
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                <a style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href= "{% if query is not None %}?search={{query}}&page=1 {% else %}?page=1 {% endif %}">&laquo; first</a>
+                <a style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href=" {% if query is not None %} ?search={{query}}&page={{ page_obj.previous_page_number }} {% else %}?page={{ page_obj.previous_page_number }} {% endif %}">&laquo;</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <a style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href=" {% if query is not None %} ?search={{query}}&page={{ page_obj.next_page_number }} {% else %}?page={{ page_obj.next_page_number }}{% endif %}">&raquo;</a>
+                <a style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href="{% if query is not None %}?search={{query}}&page={{ page_obj.paginator.num_pages }} {% else %}?page={{ page_obj.paginator.num_pages }}{% endif %}">last &raquo;</a>
+                {% endif %}
+                {% for page_num in page_obj.paginator.page_range %}
+                {% if page_obj.number  == page_num %}
+                <a style="margin-left: 5px; background-color: blue; color: white; " href="#">page {{page_num}} 
+                    of {{ page_obj.paginator.num_pages }}
+                   
+                </a>
+             
+                <!-- <a style="margin-left: 5px; background-color: blue; color: white; " href="#"> 
+                    of {{ page_obj.paginator.num_pages }}
+                </a> -->
                 
                 {% endif %}
+            
+
+                   
                
                 {% endfor %}
                 </div>
                 <script>
-                    $('a')
-                </script> -->
+                     $('#first').click(function(e){
+                        e.preventDefault();
+                        var page_no = $(this).attr('href');
+                        console.log(page_no)
+                     })
+                   
+                </script>
 
             <!-- End of table div -->
         </div>
