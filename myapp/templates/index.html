@@ -41,7 +41,7 @@
                     <th>Http Response</th>
                 </thead>
                 <tbody>
-                    {% for log in first_page %}
+                    {% for log in page_obj %}
                     <tr>
                         <td>{{log.id}}</td>
                         <td>{{log.name}}</td>
@@ -55,7 +55,26 @@
                 </tbody>
                
             </table> 
-            <div class="pagination">
+            
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+            <!-- <div class="pagination">
                 {% for i in page_range %}
                 {% if i <= 3 %}
                 <a style="margin-left: 5px; " href="{{i}}">{{i}}</a>
@@ -66,8 +85,8 @@
                 {% endfor %}
                 </div>
                 <script>
-                    
-                </script>
+                    $('a')
+                </script> -->
 
             <!-- End of table div -->
         </div>
@@ -80,57 +99,57 @@
     </div>
 
 <script>
-    $(document).on('submit','#search-form',function(e){
-        e.preventDefault();
-        let searchTerm = $('#search').val();
-        let errorEl = $('.error');
-            // console.log(searchTerm);
-            $.ajax({
-                type: 'GET',
-                url: "{% url 'search' %}",
-                data: {
-                    search:$('#search').val()
-                },
+    // $(document).on('submit','#search-form',function(e){
+    //     e.preventDefault();
+    //     let searchTerm = $('#search').val();
+    //     let errorEl = $('.error');
+    //         // console.log(searchTerm);
+    //         $.ajax({
+    //             type: 'GET',
+    //             url: "{% url 'search' %}",
+    //             data: {
+    //                 search:$('#search').val()
+    //             },
 
-                success: function(response){
-                    $('tbody').empty();
-                    let temp = "";
-                    if(response.logs.length > 0){
+    //             success: function(response){
+    //                 $('tbody').empty();
+    //                 let temp = "";
+    //                 if(response.logs.length > 0){
                         
-                        for(var log in response.logs){
+    //                     for(var log in response.logs){
                         
-                        temp = `
-                        <tr>
-                            <td> ${response.logs[log].id}</td>
-                            <td>${response.logs[log].name}</td>
-                            <td>${response.logs[log].description}</td>
-                            <td>${response.logs[log].ip_address}</td>
-                            <td> ${response.logs[log].port}</td>
-                            <td> ${response.logs[log].http_response}</td>
-                        </tr>
-                        `;
-                        $('tbody').append(temp)
+    //                     temp = `
+    //                     <tr>
+    //                         <td> ${response.logs[log].id}</td>
+    //                         <td>${response.logs[log].name}</td>
+    //                         <td>${response.logs[log].description}</td>
+    //                         <td>${response.logs[log].ip_address}</td>
+    //                         <td> ${response.logs[log].port}</td>
+    //                         <td> ${response.logs[log].http_response}</td>
+    //                     </tr>
+    //                     `;
+    //                     $('tbody').append(temp)
                         
-                    }
-                    }
-                    else{
-                        temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
-                        $('tbody').append(temp)
+    //                 }
+    //                 }
+    //                 else{
+    //                     temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
+    //                     $('tbody').append(temp)
 
-                    }
+    //                 }
                    
-                },
-                error: function(response){
-                    errorEl.css('display','block')
-                    errorEl.css('color','red','font-size',20);
-                    errorEl.text('Error: Invalid Query');
+    //             },
+    //             error: function(response){
+    //                 errorEl.css('display','block')
+    //                 errorEl.css('color','red','font-size',20);
+    //                 errorEl.text('Error: Invalid Query');
                     
-                    errorEl.fadeOut(7000)
-                }
-            });
-        });
+    //                 errorEl.fadeOut(7000)
+    //             }
+    //         });
+    //     });
         // pagination
-        $('a').click(function(e){
+        $('aa').click(function(e){
             e.preventDefault();
             var page_no = $(this).attr('href');
 
@@ -143,9 +162,10 @@
 
                 },
                 success: function(response){
+                    console.log(response.pages)
                     $('tbody').empty();
                     let temp = ""
-                    for(let log in response.logs){
+                    for(let log in response.logs[page_range]){
                         temp = `
                         <tr>
                             <td> ${response.logs[log].id}</td>

@@ -9,7 +9,7 @@ body{
 
 .main{
  
-    width: 980px;
+    width: 100%;
     background-color: #eee;
     /* border: 3px solid rgb(31, 31, 88); */
     overflow: hidden;
@@ -23,7 +23,7 @@ body{
    margin-top: 10px;
    margin-left: 20px;
    margin-right: 20px;
-   width: 100%;
+   width: 80%;
   
 
    
@@ -62,7 +62,7 @@ button{
 }
 
 .table-div{
-    width: 100%;
+    width: 80%;
     padding: 10px;
     margin-top: 10px;
     margin: auto;
