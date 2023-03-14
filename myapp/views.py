@@ -9,10 +9,10 @@ def paginate(object, per_page):
 
 
 def index(request):
-    logs = logs = mylogs.objects.all()
-    q = request.GET.get('search', None)
-    
-    if q is not None:
+   
+    q = request.GET.get('search')
+    print(q)
+    if q:
         vector = SearchVector('name','description', 'port','http_response', 'ip_address')
         query = SearchQuery(q, search_type="raw")
         # search_headline = SearchHeadline('description', query) 
