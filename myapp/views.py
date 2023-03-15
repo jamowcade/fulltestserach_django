@@ -13,7 +13,7 @@ def index(request):
     q = request.GET.get('search')
     print(q)
     if q:
-        vector = SearchVector('name','description', 'port','http_response', 'ip_address')
+        vector = SearchVector('name','massage','time', 'ip_address')
         query = SearchQuery(q, search_type="raw")
         # search_headline = SearchHeadline('description', query) 
         logs = mylogs.objects.annotate(search=vector).filter(search=query)
@@ -66,9 +66,9 @@ def search(request):
     }
     q = request.GET.get('search')
     print(q)
-    vector = SearchVector('name','description', 'port','http_response', 'ip_address')
+    vector = SearchVector('name','massage','time', 'ip_address')
     query = SearchQuery(q, search_type="raw")
         # search_headline = SearchHeadline('description', query) 
     logs = mylogs.objects.annotate(search=vector).filter(search=query)
-    return render(request, 'index.html', context)
+    return JsonResponse({"logs":list(logs.values())})
   

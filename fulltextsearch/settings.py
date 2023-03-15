@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'fulltextsearch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'testdb',
+        'NAME': 'log_db',
         'USER' : 'postgres',
         'PASSWORD' : '12345',
         'HOST' : 'localhost'

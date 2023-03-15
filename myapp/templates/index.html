@@ -14,6 +14,29 @@
 		.pagination a { color: black; float: left; padding: 8px 16px; text-decoration: none;}
 		.pagination a.active { background-color: #4CAF50; color: white;}
 		.pagination a:hover:not(.active) {background-color: #ddd;}
+
+
+        .listPage {
+            padding:  10px;
+            text-align:  center;
+            list-style: none;
+
+        }
+
+        .listPage li{
+            background-color: #ffffffBD;
+            padding: 10px;
+            display: inline-block;
+            margin:  0 10px;
+            cursor: pointer;
+
+        }
+
+        .listPage .active{
+            background-color: blue;
+            color: white;
+        }
+       
 		</style>
 </head>
 <body>
@@ -21,7 +44,7 @@
         <div class="search-div">
         <form action="" method="GET" id="search-form">
             <input type="text" name="search" id="search" placeholder="search query">
-            <button type="submit">Search</button>
+            <button id="btn" type="submit">Search</button>
         </form>
         <!-- End of search-form div -->
         </div>
@@ -30,25 +53,29 @@
             
             <!-- End of error div -->
         </div>
+        <!-- <select class="select" onselect="loadData()">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select> -->
         <div class="table-div">
             <table border="1">
                 <thead>
                     <th>ID</th>
                     <th>Log Name</th>
-                    <th>Log Description</th>
+                    <th>Log Massage</th>
                     <th>Ip Address</th>
-                    <th>Port</th>
-                    <th>Http Response</th>
+                    <th>Time</th>
                 </thead>
                 <tbody>
                     {% for log in page_obj %}
                     <tr>
                         <td>{{log.id}}</td>
                         <td>{{log.name}}</td>
-                        <td>{{log.description}}</td>
+                        <td>{{log.massage}}</td>
                         <td>{{log.ip_address}}</td>
-                        <td>{{log.port}}</td>
-                        <td>{{log.http_response}}</td>
+                        <td>{{log.time}}</td>
 
                         {% endfor %}
                     </tr>
@@ -103,14 +130,24 @@
                
                 {% endfor %}
                 </div>
-                <script>
+            <div id="paginate" style="display: none;">
+                <a id="left" style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href="">&laquo;</a>
+                <a id="right" style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href="">&raquo;</a>
+                <a id="first" style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href="">first</a>
+                <a id="last" style="margin-left: 5px; background-color: hwb(240 37% 62% / 0.926); color: white; " href="">last</a>
+
+            </div>
+            <ul class="listPage">
+
+            </ul>
+                <!-- <script>
                      $('#first').click(function(e){
                         e.preventDefault();
                         var page_no = $(this).attr('href');
                         console.log(page_no)
                      })
                    
-                </script>
+                </script> -->
 
             <!-- End of table div -->
         </div>
@@ -123,55 +160,193 @@
     </div>
 
 <script>
-    // $(document).on('submit','#search-form',function(e){
-    //     e.preventDefault();
-    //     let searchTerm = $('#search').val();
-    //     let errorEl = $('.error');
-    //         // console.log(searchTerm);
-    //         $.ajax({
-    //             type: 'GET',
-    //             url: "{% url 'search' %}",
-    //             data: {
-    //                 search:$('#search').val()
-    //             },
+    $(document).on('submit','#search-form',function(e){
+        e.preventDefault();
+        let searchTerm = $('#search').val();
+        let btn =  document.querySelector('#btn')
+        disableBtn();
+        let errorEl = $('.error');
+            // console.log(searchTerm);
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'search' %}",
+                data: {
+                    search:$('#search').val()
+                },
 
-    //             success: function(response){
-    //                 $('tbody').empty();
-    //                 let temp = "";
-    //                 if(response.logs.length > 0){
+                success: function(response){
+                    $('tbody').empty();
+                    let temp = "";
+                    if(response.logs.length > 0){
                         
-    //                     for(var log in response.logs){
+                        for(var log in response.logs){
                         
-    //                     temp = `
-    //                     <tr>
-    //                         <td> ${response.logs[log].id}</td>
-    //                         <td>${response.logs[log].name}</td>
-    //                         <td>${response.logs[log].description}</td>
-    //                         <td>${response.logs[log].ip_address}</td>
-    //                         <td> ${response.logs[log].port}</td>
-    //                         <td> ${response.logs[log].http_response}</td>
-    //                     </tr>
-    //                     `;
-    //                     $('tbody').append(temp)
+                        temp = `
+                        <tr>
+                            <td> ${response.logs[log].id}</td>
+                            <td>${response.logs[log].name}</td>
+                            <td>${response.logs[log].massage}</td>
+                            <td>${response.logs[log].ip_address}</td>
+                            <td> ${response.logs[log].time}</td>
+                           
+                        </tr>
+                        `;
+                        $('tbody').append(temp)
                         
-    //                 }
-    //                 }
-    //                 else{
-    //                     temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
-    //                     $('tbody').append(temp)
+                       
+                        
+                      
+                        
+                    }
+                    enableBtn();
 
-    //                 }
-                   
-    //             },
-    //             error: function(response){
-    //                 errorEl.css('display','block')
-    //                 errorEl.css('color','red','font-size',20);
-    //                 errorEl.text('Error: Invalid Query');
+                    loadData();
                     
-    //                 errorEl.fadeOut(7000)
-    //             }
-    //         });
-    //     });
+                    }
+                    else{
+                        temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
+                        $('tbody').append(temp);
+                        enableBtn();
+                        $('.pagination').hide();
+
+                        
+
+                    }
+                   
+                },
+                error: function(response){
+                    errorEl.css('display','block')
+                    errorEl.css('color','red','font-size',20);
+                    errorEl.text('Error: Invalid Query');
+                    
+                    errorEl.fadeOut(7000)
+                }
+            });
+
+            function disableBtn(){
+                btn.innerHTML = "searching..";
+                btn.disabled = true;
+                $('#btn').css('background-color','gray')
+            }
+            function enableBtn(){
+                btn.innerHTML = "search";
+                btn.disabled = false;
+                $('#btn').css('background-color','black')
+            }
+
+           
+           
+        
+        });
+
+        // pagination 
+        let thisPage = 1; // current page. initially as first page.
+        // update UI and display data on table.
+        function loadData(){
+                let limit = 10;
+                let list = document.querySelectorAll('tbody tr')
+                console.log(list)
+                let beginGet = limit * (thisPage -1);
+                let endGet = limit * thisPage - 1;
+            list.forEach((item, key)=>{
+                if(key >= beginGet && key <= endGet){
+                    $(item).show();
+                    $('.pagination').hide();
+                    $('#paginate').show();
+
+                }
+                else{
+                    $(item).hide();
+                }
+        });
+        listPage();
+
+        // setup pagination links
+        function listPage(){
+        let count = Math.ceil(list.length / limit);
+        console.log(count);
+        document.querySelector('#paginate').innerHTML = "";
+        let paginate = document.querySelector('.listPage');
+        paginate.innerHTML = "";
+
+        // previous page button
+        if(thisPage != 1){
+            let first = document.createElement('li');
+            first.innerText = "first";
+            first.setAttribute('onclick',  "changePage("+1+")" );
+            document.querySelector('.listPage').appendChild(first);
+
+            let prev = document.createElement('li');
+            prev.innerText = "prev";
+            prev.setAttribute('onclick',  "changePage("+(thisPage - 1)+")" );
+            document.querySelector('.listPage').appendChild(prev);
+        }
+
+        for(i = 1; i <= count; i++){
+            let newPage = document.createElement('li');
+            newPage.innerText = i;
+            
+            if(i == thisPage){
+                newPage.classList.add('active');
+               
+            }
+            
+            // update page number.
+            newPage.setAttribute('onclick', "changePage("+i+")");
+
+            // display only 3 page numbers initially
+            if(i <= 3){
+                document.querySelector('.listPage').appendChild(newPage);
+            }
+
+           
+            
+            
+        }
+            // let current = document.createElement('li');
+            // current.innerText = `${thisPage}`;
+            // current.classList.add('active')
+            // document.querySelector('.listPage').appendChild(current);
+
+        // Active page.
+
+        // next page button
+        if(thisPage != count){
+           
+
+            let next = document.createElement('li');
+            next.innerText = "next";
+            next.setAttribute('onclick',  "changePage("+(thisPage + 1)+")")
+            document.querySelector('.listPage').appendChild(next);
+
+            let last = document.createElement('li');
+            last.innerText = "last";
+            last.setAttribute('onclick',  "changePage("+count+")")
+            document.querySelector('.listPage').appendChild(last);
+        }
+
+        let total = document.createElement('li');
+        total.innerText = `${thisPage} of ${count} pages`;
+        document.querySelector('.listPage').appendChild(total);
+
+
+    }
+
+ 
+       
+       
+
+        console.log(beginGet, endGet);
+    }
+
+    function changePage(i){
+        thisPage = i;
+        loadData();
+        console.log(thisPage);
+        
+    }
+
+  
         // pagination
         $('aa').click(function(e){
             e.preventDefault();
