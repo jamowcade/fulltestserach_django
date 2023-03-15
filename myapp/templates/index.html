@@ -208,6 +208,7 @@
                         $('tbody').append(temp);
                         enableBtn();
                         $('.pagination').hide();
+                        $('.thisPage').hide();
 
                         
 
@@ -243,6 +244,7 @@
         let thisPage = 1; // current page. initially as first page.
         // update UI and display data on table.
         function loadData(){
+               
                 let limit = 10;
                 let list = document.querySelectorAll('tbody tr')
                 console.log(list)
