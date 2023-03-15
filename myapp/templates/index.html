@@ -157,6 +157,19 @@
 
     
         <!-- End of main div -->
+
+        <li id="test">
+            {% if page_obj.has_next %}
+            {{ page_obj.next_page_number }}
+            {% endif %}
+            {% if page_obj.has_next %}
+            {{ page_obj.next_page_number }}
+            {% endif %}
+        </li>
+        <script>
+            let test = document.querySelector('#test')
+           console.log(test.innerText); 
+            </script>
     </div>
 
 <script>
