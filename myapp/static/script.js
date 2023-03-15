@@ -1,65 +1,4 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <title>home page</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}"/>
-   
-</head>
-<body>
-    <div class="main">
-        <div class="search-div">
-        <form action="" method="GET" id="search-form">
-            <input type="text" name="search" id="search" placeholder="search query">
-            <button type="submit">Search</button>
-        </form>
-        <!-- End of search-form div -->
-        </div>
-        <div class="error" style="display: none;">
-            Error message here!
-            
-            <!-- End of error div -->
-        </div>
-        <div class="table-div">
-            <table border="1">
-                <thead>
-                    <th>ID</th>
-                    <th>Log Name</th>
-                    <th>Log Description</th>
-                    <th>Ip Address</th>
-                    <th>Port</th>
-                    <th>Http Response</th>
-                </thead>
-                <tbody>
-                    {% for log in logs %}
-                    <tr>
-                        <td>{{log.id}}</td>
-                        <td>{{log.name}}</td>
-                        <td>{{log.description}}</td>
-                        <td>{{log.ip_address}}</td>
-                        <td>{{log.port}}</td>
-                        <td>{{log.http_response}}</td>
 
-                        {% endfor %}
-                    </tr>
-                </tbody>
-
-            </table> 
-            <!-- End of table div -->
-        </div>
-
-        <!-- <h3 id="not-found">No matchs; Try again!</h3> -->
-       
-
-    
-        <!-- End of main div -->
-    </div>
-
-<script>
     $(document).on('submit','#search-form',function(e){
         e.preventDefault();
         let searchTerm = $('#search').val();
@@ -125,12 +64,3 @@
        
            
         });
-</script>
-
-
-
-</script>
-
-    
-</body>
-</html>
