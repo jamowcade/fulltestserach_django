@@ -42,7 +42,7 @@
 <body>
     <div class="main">
         <div class="search-div">
-        <form action="" method="GET" id="search-form">
+        <form method="GET" id="search-form">
             <input type="text" name="search" id="search" placeholder="search query">
             <button id="btn" type="submit">Search</button>
         </form>
@@ -191,30 +191,22 @@
                     $('tbody').empty();
                     let temp = "";
                     if(response.logs.length > 0){
-                        
-                        for(var log in response.logs){
-                        
-                        temp = `
+                        const data = response.logs.map(log =>{
+                        return `
                         <tr>
-                            <td> ${response.logs[log].id}</td>
-                            <td>${response.logs[log].name}</td>
-                            <td>${response.logs[log].massage}</td>
-                            <td>${response.logs[log].ip_address}</td>
-                            <td> ${response.logs[log].time}</td>
+                            <td> ${log.id}</td>
+                            <td>${log.name}</td>
+                            <td>${log.massage}</td>
+                            <td>${log.ip_address}</td>
+                            <td> ${log.time}</td>
                            
                         </tr>
-                        `;
-                        $('tbody').append(temp)
                         
-                       
-                        
-                      
-                        
-                    }
+                        `
+                    });
+                    $('tbody').append(data);
                     enableBtn();
-
                     loadData();
-                    
                     }
                     else{
                         temp = `<p>No Data matches <b>${searchTerm}</b></p>`;
@@ -222,9 +214,6 @@
                         enableBtn();
                         $('.pagination').hide();
                         $('.thisPage').hide();
-
-                        
-
                     }
                    
                 },
